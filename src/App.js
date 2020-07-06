@@ -345,6 +345,161 @@ class ThemedButton extends Component {
   }
 }
 
+// const CommentListWithSubscription = withSubscription(
+//   CommentList,
+//   (DataSource) => DataSource.getComments()
+// );
+
+// const BlogPostWithSubscription = withSubscription(
+//   BlogPost,
+//   (DataSource, props) => DataSource.getBlogPost(props.id)
+// );
+
+// function withSubscription(WrappedComponent, selectData) {
+//   return class extends Component {
+//     constructor(props) {
+//       super(props);
+//       this.state = {
+//         data: selectData(DataSource, props)
+//       };
+//       this.handleChange = this.handleChange.bind(this);
+//     }
+//     componentDidMount() {
+//       DataSource.addChangeListener(this.handleChange);
+//     }
+//     componentWillUnmount() {
+//       DataSource.removeChangeListener(this.handleChange);
+//     }
+//     handleChange() {
+//       this.setState({
+//         data: selectData(DataSource, this.props)
+//       })
+//     }
+//     render() {
+//       return (
+//         <WrappedComponent data={this.state.data} {...this.props} />
+//       );
+//     }
+//   }
+// }
+
+const Button = props => {
+  const { kind, ...other } = props;
+  const className = kind === "primary" ? "PrimaryButton" : "SecondaryButton";
+  return <button className={className} {...other}></button>
+}
+
+const UserButton = () => {
+  return (
+    <Button kind="primary" onClick={() => { console.log("点击了"); }}>hello world!</Button>
+  )
+}
+class CounterButton extends React.PureComponent {
+  constructor(props) {
+    super(props);
+    this.state = { count: 1 }
+  }
+  render() {
+    return (
+      <button color={this.props.color} onClick={() => this.setState(state => ({ count: state.count + 1 }))}>
+        count:{this.state.count}
+      </button>
+    );
+  }
+}
+
+class ListOfWords extends React.PureComponent {
+  render() {
+    return <div>{this.props.words.join(',')}</div>;;
+  }
+}
+
+class WordAdder extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      words: ['marklar']
+    };
+    this.handleClick = this.handleClick.bind(this);
+  }
+  handleClick() {
+    this.setState(state => ({
+      words: state.words.concat('marklar')
+    }));
+  }
+  render() {
+    return (
+      <div>
+        <button onClick={this.handleClick}>点击</button>
+        <ListOfWords words={this.state.words} />
+      </div>
+    );
+  }
+}
+
+class CustomText extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+    this.textInput = React.createRef();
+    this.focusTextInput = this.focusTextInput.bind(this);
+  }
+  focusTextInput() {
+    this.textInput.current.focus();
+  }
+  render() {
+    return (
+      <div>
+        <div onClick={this.focusTextInput}>聚焦</div>
+        <input ref={this.textInput} type="text" />
+      </div>
+    );
+  }
+}
+
+class Cat extends Component {
+  render() {
+    const mouse = this.props.mouse;
+    return (
+      <img src="./logo.svg" alt='logo' style={{ position: 'absolute', left: mouse.x, top: mouse.y }} />
+    );
+  }
+}
+
+class Mouse extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { x: 0, y: 0 };
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+  }
+  handleMouseMove(event) {
+    this.setState({
+      x: event.clientX,
+      y: event.clientY
+    })
+  }
+  render() {
+    return (
+      <div style={{ height: '100vh' }} onMouseOver={this.handleMouseMove}>
+        {this.props.render(this.state)}
+      </div>
+    );
+  }
+}
+
+class MouseTracker extends Component {
+  render() {
+    return (
+      <div>
+        <h1>移动鼠标!</h1>
+        <Mouse render={mouse => (
+          <Cat mouse={mouse} />
+        )} />
+      </div>
+    );
+  }
+}
+
 function App() {
   return (
     <div className="App">
@@ -363,6 +518,11 @@ function App() {
         <CustomTextInput />
         <OuterClickExample />
         <MyApp />
+        <UserButton />
+        <CounterButton />
+        <WordAdder />
+        <CustomText />
+        <MouseTracker />
       </header>
     </div>
   );
