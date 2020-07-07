@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 // import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import logo from './logo.svg';
 import './App.css';
@@ -480,7 +480,7 @@ class Mouse extends Component {
   }
   render() {
     return (
-      <div style={{ height: '100vh' }} onMouseOver={this.handleMouseMove}>
+      <div style={{ height: '100px' }} onMouseOver={this.handleMouseMove}>
         {this.props.render(this.state)}
       </div>
     );
@@ -499,6 +499,90 @@ class MouseTracker extends Component {
     );
   }
 }
+
+class Greeting extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {}
+  }
+  render() {
+    return (<div>hello,{this.props.name}</div>);
+  }
+}
+
+Greeting.defaultProps = {
+  name: 'panshihao'
+}
+
+class NameForm1 extends Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.input = React.createRef();
+  }
+  handleSubmit(event) {
+    console.log(this.input.current.value);
+    event.preventDefault();
+  }
+  render() {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <label>
+          Name: <input type="text" ref={this.input} defaultValue="11" />
+        </label>
+        <input type="submit" value="Submit" />
+      </form>
+    );
+  }
+}
+
+function createMarkup() {
+  return { __html: 'First &middot; Second' }
+}
+
+function MyComponent() {
+  return <div dangerouslySetInnerHTML={createMarkup()}></div>
+}
+
+function Example() {
+  const [count, setCount] = useState(0);
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>点我</button>
+    </div>
+  )
+}
+
+function MyCount() {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    document.title = `You clicked ${count} times`;
+  });
+  return (
+    <div>
+      <p>你已经点击了{count}次</p>
+      <button onClick={() => setCount(count + 1)}>点击加一</button>
+    </div>
+  )
+}
+
+// function FriendStatus(props) {
+//   const [isOnline, setIsOnline] = useState(null);
+//   function handleStatusChange(status) {
+//     setIsOnline(status.isOnline);
+//   }
+//   useEffect(() => {
+//     ChatAPI.subscribeToFriendStatus(props.friend.id, handleStatusChange);
+//     return () => {
+//       ChatAPI.unsubscribeFromFriendStatus(props.friend.id, handleStatusChange);
+//     }
+//   })
+//   if (isOnline === null) {
+//     return 'Loading...';
+//   }
+//   return isOnline ? 'Online' : 'Offline';
+// }
 
 function App() {
   return (
@@ -523,6 +607,11 @@ function App() {
         <WordAdder />
         <CustomText />
         <MouseTracker />
+        <Greeting />
+        <NameForm1 />
+        <MyComponent />
+        <Example />
+        <MyCount />
       </header>
     </div>
   );
